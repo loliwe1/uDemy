@@ -22,4 +22,4 @@ class Option{
 }
 
 let div = new Option(200,200,'red',20, 'center');
-div.createDiv('loh govno parasha');
+div.createDiv('Hello world!');

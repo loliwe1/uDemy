@@ -43,22 +43,22 @@ window.addEventListener('DOMContentLoaded', function () {
         let seconds = Math.floor(t / 1000 % 60);
         let minutes = Math.floor(t / 1000 / 60 % 60);
         let hours = Math.floor(t / 1000 / 60 / 60);
-        if(t<= 0) {
+        if (t <= 0) {
             seconds = '00';
             minutes = '00';
             hours = '00';
         }
-        if(seconds < 10){
+        if (seconds < 10) {
             seconds = '0' + seconds;
         }
-        if(hours < 10){
+        if (hours < 10) {
             hours = '0' + hours;
         }
-        if(minutes < 10){
+        if (minutes < 10) {
             minutes = '0' + minutes;
         }
-       
-        
+
+
 
         return {
             'total': t,
@@ -75,13 +75,13 @@ window.addEventListener('DOMContentLoaded', function () {
         let seconds = timer.querySelector('.seconds');
         let timeInterval = setInterval(updateClock, 1000);
 
-        function updateClock(){
+        function updateClock() {
             let t = getTimeRemaining(endtime);
             hours.textContent = t.hours;
             minutes.textContent = t.minutes;
             seconds.textContent = t.seconds;
 
-            if(t.total<=0){
+            if (t.total <= 0) {
                 clearInterval(timeInterval);
             }
         }
@@ -89,9 +89,32 @@ window.addEventListener('DOMContentLoaded', function () {
 
     setClock('timer', deadline);
 
+    // Modal-----------------------------------------------------------------
+
+    let more = document.querySelector('.more');
+    let overlay = document.querySelector('.overlay');
+    let close = document.querySelector('.popup-close');
+    let infoTab = document.querySelector('.info');
+    function modal(){
+        document.body.style.overflow = 'hidden';
+        overlay.style.display = 'block';
+        this.classList.add('more-splash');
+    };
+    function closeM(){
+        overlay.style.display = 'none';
+        more.classList.remove('more-splash');
+        document.body.style.overflow = '';
+    };
+
+    more.addEventListener('click', modal);
+    close.addEventListener('click', closeM);
+    infoTab.addEventListener('click', function(event){
+        let target = event.target;
+        if(target.classList.contains('description-btn')){
+            modal();
+        }   
+    })
 
 
-
-
-
+    
 });

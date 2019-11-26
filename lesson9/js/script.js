@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    info.addEventListener('click', function (event) {
+    info.addEventListener('click', (event)=> {
         let target = event.target;
         if (target && target.classList.contains('info-header-tab')) {
             for (let i = 0; i < tab.length; i++) {
@@ -57,16 +57,13 @@ window.addEventListener('DOMContentLoaded', function () {
         if (minutes < 10) {
             minutes = '0' + minutes;
         }
-
-
-
         return {
             'total': t,
             'hours': hours,
             'minutes': minutes,
             "seconds": seconds
         }
-    }
+    };
 
     function setClock(id, endtime) {
         let timer = document.getElementById(id);
@@ -108,13 +105,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
     more.addEventListener('click', modal);
     close.addEventListener('click', closeM);
-    infoTab.addEventListener('click', function(event){
+    infoTab.addEventListener('click', (event)=>{
         let target = event.target;
         if(target.classList.contains('description-btn')){
             modal();
         }   
-    })
-
-
-    
+    });
 });

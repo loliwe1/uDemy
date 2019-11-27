@@ -107,8 +107,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
     more.addEventListener('click', modal);
     close.addEventListener('click', closeM);
-    
-    infoTab.addEventListener('click', function(event){
+
+    infoTab.addEventListener('click', function (event) {
         let target = event.target;
         if (target.classList.contains('description-btn')) {
             document.body.style.overflow = 'hidden';
@@ -133,45 +133,86 @@ window.addEventListener('DOMContentLoaded', function () {
     let statusMesage = document.createElement('div');
     statusMesage.classList.add('status');
 
-    function serverRequest(form, input){
-        let request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-        request.setRequestHeader('Content-type', 'application/json; charset=utf-8') //Json
-        // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); - AppData
+    function serverRequest(form, input) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            form.append(statusMesage);
+            let request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-type', 'application/json; charset=utf-8') //Json
+            // request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); - AppData
+            let formData = new FormData(form);
+            let obj = {};
+            formData.forEach((value, key) => obj[key] = value);
+            let json = JSON.stringify(obj);
+            request.send(json);
 
-        let formData = new FormData(form);
-        let obj = {};
-        formData.forEach((value,key)=> obj[key] = value);
-        console.log(obj);
-        let json = JSON.stringify(obj);
-        request.send(json);
+            request.addEventListener('readystatechange', function () {
+                if (request.readyState < 4) {
+                    statusMesage.innerHTML = message.loading;
 
-        request.addEventListener('readystatechange', function(){
-            if(request.readyState <4){
-                statusMesage.innerHTML = message.loading;
+                } else if (request.readyState === 4 && request.status === 200) {
+                    statusMesage.innerHTML = message.success;
+                } else {
+                    statusMesage.innerHTML = message.fuilure;
+                }
+            });
 
-            }else if(request.readyState === 4 && request.status === 200){
-                statusMesage.innerHTML = message.success;
-            }else{
-                statusMesage.innerHTML = message.fuilure;
+            for (let i = 0; i < input.length; i++) {
+                input[i].value = '';
             }
         })
-        for(let i=0; i<input.length; i++){
-            input[i].value = '';
-        }
+    };
+
+    serverRequest(form, input);
+    serverRequest(contactForm, contactFormInput);
+
+    // Slider---------------------------------------------------------------------------------------------------------
+    let slideIndex = 1;
+    let slides = document.querySelectorAll('.slider-item');
+    let prev = document.querySelector('.prev');
+    let next = document.querySelector('.next');
+    let dotsWrap = document.querySelector('.slider-dots');
+    let dots = document.querySelectorAll('.dot');
+    showSlides(slideIndex);
+
+    function showSlides(n) {
+
+        if (n > slides.length) slideIndex = 1;
+        if (n < 1) slideIndex = slides.length;
+
+        slides.forEach((item) => item.style.display = 'none');
+        dots.forEach((item) => item.classList.remove('dot-active'));
+
+        slides[slideIndex - 1].style.display = 'block';
+        dots[slideIndex - 1].classList.add('dot-active');
     }
 
-    form.addEventListener('submit', function(event){
-        event.preventDefault();
-        this.append(statusMesage);
-        serverRequest(form, input);
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n)
+    }
+
+    prev.addEventListener('click', function () {
+        plusSlides(-1);
+    });
+    next.addEventListener('click', function () {
+        plusSlides(1);
     });
 
-    contactForm.addEventListener('submit', function(event){
-        event.preventDefault();
-        this.append(statusMesage);
-        serverRequest(contactForm, contactFormInput);
+    dotsWrap.addEventListener('click', function(event){
+        let target = event.target;
+        for(let i=0; i<dots.length+1; i++){
+            if(target.classList.contains('dot') && target === dots[i-1]){
+                currentSlide(i);
+            }
+        }
+
     })
+
 
 
 });
